@@ -190,7 +190,7 @@ fi
 
 PHP_Selector_yn=n
 if [ "$PHP_Server_version" = "all" ]; then
-PHP_Server_version='71'
+PHP_Server_version='56'
 PHP_Selector_yn='y'
 fi
 
