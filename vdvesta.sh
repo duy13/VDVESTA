@@ -718,12 +718,12 @@ fi
 
 if [ "$vDDoS_yn" = "y" ]; then
 
-curl -L https://github.com/duy13/vDDoS-Protection/raw/master/vddos-1.13.3-centos7 -o /usr/bin/vddos
+curl -L https://github.com/duy13/vDDoS-Protection/raw/master/vddos-1.13.6-centos7 -o /usr/bin/vddos
 
-goc=`curl -L https://raw.githubusercontent.com/duy13/vDDoS-Protection/master/md5sum.txt --silent | grep "vddos-1.13.3-centos7" |awk 'NR==1 {print $1}'`
+goc=`curl -L https://raw.githubusercontent.com/duy13/vDDoS-Protection/master/md5sum.txt --silent | grep "vddos-1.13.6-centos7" |awk 'NR==1 {print $1}'`
 tai=`md5sum /usr/bin/vddos | awk 'NR==1 {print $1}'`
 if [ "$goc" != "$tai" ]; then
-curl -L http://1.voduy.com/vDDoS-Proxy-Protection/vddos-1.13.3-centos7 -o /usr/bin/vddos
+curl -L http://1.voduy.com/vDDoS-Proxy-Protection/vddos-1.13.6-centos7 -o /usr/bin/vddos
 fi
 
 chmod 700 /usr/bin/vddos
