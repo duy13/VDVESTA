@@ -12,7 +12,7 @@ os=$(cut -f 1 -d ' ' /etc/redhat-release)
 release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
 arch=`arch`
 random=`cat /dev/urandom | tr -cd 'A-Z0-9' | head -c 5`
-password=`cat /dev/urandom | tr -cd 'A-Za-z0-9@#$%' | head -c 5`
+password=`cat /dev/urandom | tr -cd 'A-Za-z0-9' | head -c 10`
 IP=`curl -s -L http://cpanel.net/showip.cgi`
 if [ ! -f /etc/redhat-release ] || [ "$os" != "CentOS" ] || [ "$release" != "7" ]; then
 echo 'ERROR! Please use CentOS Linux release 7 x86_64!
