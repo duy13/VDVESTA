@@ -12,7 +12,7 @@ os=$(cut -f 1 -d ' ' /etc/redhat-release)
 release=$(grep -o "[0-9]" /etc/redhat-release |head -n1)
 arch=`arch`
 random=`cat /dev/urandom | tr -cd 'A-Z0-9' | head -c 5`
-password=`cat /dev/urandom | tr -cd 'A-Za-z0-9' | head -c 10`
+password=`cat /dev/urandom | tr -cd 'A-Z0-9' | head -c 10`
 IP=`curl -s -L http://cpanel.net/showip.cgi`
 if [ ! -f /etc/redhat-release ] || [ "$os" != "CentOS" ] || [ "$release" != "7" ]; then
 echo 'ERROR! Please use CentOS Linux release 7 x86_64!
@@ -151,8 +151,9 @@ IP_hostname='UNKNOWN'
 fi
 if [ "$IP_hostname" != "$IP" ]; then
 echo 'ERROR! 
-Your IP Server is '$IP' 
-Your IP Hostname is '$IP_hostname'
+Your Server IP Address is ==> '$IP'!
+Your Hostname '$hostname_i' point to IP Address ==> '$IP_hostname'!
+
 Please point your Domain DNS A record '$hostname_i' to '$IP' and try again!'
 exit 0
 fi
@@ -212,7 +213,10 @@ gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1' > /etc/yum.repos.d/MariaDB.repo
 fi
 
-
+xfs_yn=`cat /etc/fstab |grep xfs`
+if [ "$xfs_yn" == "" ]; then
+xfs_yn=n
+fi
 
 ############################################################
 
@@ -242,14 +246,21 @@ fi
 if [ "$fail2ban_yn" = "y" ]; then
 fail2ban_yn='--fail2ban yes'
 fi
-if [ "$fail2ban_yn" = "n" ]; then
-fail2ban_yn='--fail2ban no'
+if [ "$xfs_yn" != "n" ]; then
+quota_yn='--quota no'
+cp /etc/fstab /etc/fstab.bak.$random
+fi
+if [ "$xfs_yn" = "n" ]; then
+quota_yn='--quota yes'
+fi
+if [ "$Web_Server_version" = "apache" ]; then
+Web_Server_version='--nginx no --apache yes --phpfpm no'
 fi
 
 sed -i "s#%PHP_Server_version%#$PHP_Server_version#g" vst-install.sh
 sed -i "s#%MariaDB_Server_version%#$MariaDB_Server_version#g" vst-install.sh
 
-bash vst-install.sh --force --interactive yes $Web_Server_version --vsftpd yes --proftpd no --exim yes --dovecot yes $Spamassassin_Clamav_yn --named yes --iptables yes $fail2ban_yn --mysql yes --postgresql no $Remi_yn --quota yes --hostname $hostname_i --email $email_i --password $password
+bash vst-install.sh --force --interactive yes $Web_Server_version --vsftpd yes --proftpd no --exim yes --dovecot yes $Spamassassin_Clamav_yn --named yes --iptables yes $fail2ban_yn --mysql yes --postgresql no $Remi_yn $quota_yn --hostname $hostname_i --email $email_i --password $password
 
 
 yum -y install socat
