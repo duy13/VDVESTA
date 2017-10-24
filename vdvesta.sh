@@ -246,6 +246,9 @@ fi
 if [ "$fail2ban_yn" = "y" ]; then
 fail2ban_yn='--fail2ban yes'
 fi
+if [ "$fail2ban_yn" = "n" ]; then
+fail2ban_yn='--fail2ban no'
+fi
 if [ "$xfs_yn" != "n" ]; then
 quota_yn='--quota no'
 cp /etc/fstab /etc/fstab.bak.$random
