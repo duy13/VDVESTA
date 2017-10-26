@@ -269,7 +269,8 @@ bash vst-install.sh --force --interactive yes $Web_Server_version --vsftpd yes -
 yum -y install socat
 wget -O -  https://get.acme.sh | sh
 echo '@monthly root sleep 10 && service vesta restart' | sudo tee --append /etc/crontab  >/dev/null 2>&1
-service httpd restart
+service httpd restart >/dev/null 2>&1
+service nginx restart >/dev/null 2>&1
 /root/.acme.sh/acme.sh --issue -d $hostname_i -w /home/admin/web/$hostname_i/public_html
 if [ -f /root/.acme.sh/$hostname_i/fullchain.cer ]; then
 rm -rf /usr/local/vesta/ssl/*
@@ -748,31 +749,11 @@ default https://0.0.0.0:443  https://'$IP':8443  no    no    /vddos/ssl/your-dom
 fi
 
 
-
-
 /usr/bin/vddos restart >/dev/null 2>&1
 service mariadb restart >/dev/null 2>&1
 service memcached restart >/dev/null 2>&1
 
-if [ ! -f /root/.acme.sh/$hostname_i/fullchain.cer ]; then
-/root/.acme.sh/acme.sh --issue -d $hostname_i -w /home/admin/web/$hostname_i/public_html
-	if [ -f /root/.acme.sh/$hostname_i/fullchain.cer ]; then
-	rm -rf /usr/local/vesta/ssl/*
 
-	ln -s /root/.acme.sh/$hostname_i/fullchain.cer /usr/local/vesta/ssl/certificate.crt
-	ln -s /root/.acme.sh/$hostname_i/$hostname_i.key /usr/local/vesta/ssl/certificate.key
-
-	service vesta restart 
-	fi
-fi
-
-clear
-
-if [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
-chkconfig nginx off >/dev/null 2>&1
-service httpd restart >/dev/null 2>&1
-httpd -v
-fi
 if [ "$Web_Server_version" = "--nginx yes --apache no --phpfpm yes" ]; then
 echo '[%backend%]
 listen = /var/run/php5-%backend%.sock
@@ -795,9 +776,34 @@ env[TMPDIR] = /tmp
 env[TEMP] = /tmp' > /usr/local/vesta/data/templates/web/php-fpm/VDVESTA-Socket.tpl
 chkconfig httpd off >/dev/null 2>&1
 service nginx restart >/dev/null 2>&1
-nginx -v
 fi
 
+if [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
+chkconfig nginx off >/dev/null 2>&1
+service httpd restart >/dev/null 2>&1
+fi
+
+if [ ! -f /root/.acme.sh/$hostname_i/fullchain.cer ]; then
+/root/.acme.sh/acme.sh --issue -d $hostname_i -w /home/admin/web/$hostname_i/public_html
+	if [ -f /root/.acme.sh/$hostname_i/fullchain.cer ]; then
+	rm -rf /usr/local/vesta/ssl/*
+
+	ln -s /root/.acme.sh/$hostname_i/fullchain.cer /usr/local/vesta/ssl/certificate.crt
+	ln -s /root/.acme.sh/$hostname_i/$hostname_i.key /usr/local/vesta/ssl/certificate.key
+
+	service vesta restart 
+	fi
+fi
+
+clear
+
+if [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
+httpd -v
+fi
+
+if [ "$Web_Server_version" = "--nginx yes --apache no --phpfpm yes" ]; then
+nginx -v
+fi
 
 mysql -V
 php -v
