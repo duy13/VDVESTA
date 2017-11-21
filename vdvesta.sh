@@ -633,6 +633,11 @@ if [ ! -f /etc/rc.d/init.d/vesta ]; then
 	exit 0
 fi
 
+cp /usr/local/vesta/data/templates/web/httpd/default.tpl /usr/local/vesta/data/templates/web/httpd/nobasedir.tpl
+cp /usr/local/vesta/data/templates/web/httpd/default.stpl /usr/local/vesta/data/templates/web/httpd/nobasedir.stpl
+basedir='php_admin_value open_basedir'
+sed -i "/.*$basedir.*/d" /usr/local/vesta/data/templates/web/httpd/nobasedir.tpl
+sed -i "/.*$basedir.*/d" /usr/local/vesta/data/templates/web/httpd/nobasedir.stpl
 
 if [ "$PHP_Selector_yn" = "y" ]; then
 cp -r /etc/httpd /etc/httpd-bak-$random
