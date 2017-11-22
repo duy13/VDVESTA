@@ -265,7 +265,7 @@ sed -i "s#%MariaDB_Server_version%#$MariaDB_Server_version#g" vst-install.sh
 
 bash vst-install.sh --force --interactive yes $Web_Server_version --vsftpd yes --proftpd no --exim yes --dovecot yes $Spamassassin_Clamav_yn --named yes --iptables yes $fail2ban_yn --mysql yes --postgresql no $Remi_yn $quota_yn --hostname $hostname_i --email $email_i --password $password
 
-
+if [ "$vDDoS_yn" != "y" ]; then
 yum -y install socat
 wget -O -  https://get.acme.sh | sh
 echo '@monthly root sleep 10 && service vesta restart' | sudo tee --append /etc/crontab  >/dev/null 2>&1
@@ -281,7 +281,7 @@ ln -s /root/.acme.sh/$hostname_i/$hostname_i.key /usr/local/vesta/ssl/certificat
 service vesta restart
 
 fi
-
+fi
 
 
 
@@ -787,9 +787,14 @@ if [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
 chkconfig nginx off >/dev/null 2>&1
 service httpd restart >/dev/null 2>&1
 fi
-
+if [ "$vDDoS_yn" = "y" ]; then
 if [ ! -f /root/.acme.sh/$hostname_i/fullchain.cer ]; then
-/root/.acme.sh/acme.sh --issue -d $hostname_i -w /home/admin/web/$hostname_i/public_html
+yum -y install socat
+wget -O -  https://get.acme.sh | sh
+echo '@monthly root sleep 10 && service vesta restart' | sudo tee --append /etc/crontab  >/dev/null 2>&1
+service httpd restart >/dev/null 2>&1
+service nginx restart >/dev/null 2>&1
+/root/.acme.sh/acme.sh --issue -d $hostname_i -w /vddos/letsencrypt
 	if [ -f /root/.acme.sh/$hostname_i/fullchain.cer ]; then
 	rm -rf /usr/local/vesta/ssl/*
 
@@ -799,7 +804,7 @@ if [ ! -f /root/.acme.sh/$hostname_i/fullchain.cer ]; then
 	service vesta restart 
 	fi
 fi
-
+fi
 clear
 
 if [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
