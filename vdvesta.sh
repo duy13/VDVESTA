@@ -749,8 +749,16 @@ fi
 chmod 700 /usr/bin/vddos
 /usr/bin/vddos setup
 /usr/bin/vddos autostart
-echo 'default http://0.0.0.0:80    http://'$IP':8080    no    no    no           no
-default https://0.0.0.0:443  https://'$IP':8443  no    no    /vddos/ssl/your-domain.com.pri /vddos/ssl/your-domain.com.crt' >> /vddos/conf.d/website.conf
+if [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
+service httpd restart >/dev/null 2>&1
+fi
+if [ "$Web_Server_version" = "--nginx yes --apache no --phpfpm yes" ]; then
+service nginx restart >/dev/null 2>&1
+fi
+IPWEB=`netstat -lntup|grep 8080| awk {'print $4'}| awk 'NR==1'| tr : " "| awk {'print $1'}`
+
+echo 'default http://0.0.0.0:80    http://'$IPWEB':8080    no    no    no           no
+default https://0.0.0.0:443  https://'$IPWEB':8443  no    no    /vddos/ssl/your-domain.com.pri /vddos/ssl/your-domain.com.crt' >> /vddos/conf.d/website.conf
 fi
 
 
