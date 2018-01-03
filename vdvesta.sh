@@ -159,6 +159,7 @@ exit 0
 fi
 
 echo 'Hostname => '$hostname_i''
+hostnamectl set-hostname $hostname_i
 
 echo -n 'Enter your Email [admin@'$hostname_i']: '
 read email_i
