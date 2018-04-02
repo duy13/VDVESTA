@@ -278,7 +278,7 @@ rm -rf /usr/local/vesta/ssl/*
 
 ln -s /root/.acme.sh/$hostname_i/fullchain.cer /usr/local/vesta/ssl/certificate.crt
 ln -s /root/.acme.sh/$hostname_i/$hostname_i.key /usr/local/vesta/ssl/certificate.key
-
+chmod -R 664 /usr/local/vesta/ssl/*
 service vesta restart
 
 fi
@@ -738,13 +738,12 @@ fi
 
 
 if [ "$vDDoS_yn" = "y" ]; then
-
-curl -L https://github.com/duy13/vDDoS-Protection/raw/master/vddos-1.13.8-centos7 -o /usr/bin/vddos
-
-goc=`curl -L https://raw.githubusercontent.com/duy13/vDDoS-Protection/master/md5sum.txt --silent | grep "vddos-1.13.8-centos7" |awk 'NR==1 {print $1}'`
+latest_version=`curl -L https://raw.githubusercontent.com/duy13/vDDoS-Protection/master/CHANGELOG.txt|grep '*vDDoS-' |awk 'NR==1' |tr -d '*vDDoS-'|tr -d ':'`
+curl -L https://github.com/duy13/vDDoS-Protection/raw/master/vddos-$latest_version-centos7 -o /usr/bin/vddos
+goc=`curl -L https://raw.githubusercontent.com/duy13/vDDoS-Protection/master/md5sum.txt --silent | grep "vddos-$latest_version-centos7" |awk 'NR==1 {print $1}'`
 tai=`md5sum /usr/bin/vddos | awk 'NR==1 {print $1}'`
 if [ "$goc" != "$tai" ]; then
-curl -L http://1.voduy.com/vDDoS-Proxy-Protection/vddos-1.13.8-centos7 -o /usr/bin/vddos
+curl -L http://1.voduy.com/vDDoS-Proxy-Protection/vddos-$latest_version-centos7 -o /usr/bin/vddos
 fi
 
 chmod 700 /usr/bin/vddos
@@ -809,7 +808,7 @@ service nginx restart >/dev/null 2>&1
 
 	ln -s /root/.acme.sh/$hostname_i/fullchain.cer /usr/local/vesta/ssl/certificate.crt
 	ln -s /root/.acme.sh/$hostname_i/$hostname_i.key /usr/local/vesta/ssl/certificate.key
-
+	chmod -R 664 /usr/local/vesta/ssl/*
 	service vesta restart 
 	fi
 fi
