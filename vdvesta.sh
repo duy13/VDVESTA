@@ -276,8 +276,8 @@ service nginx restart >/dev/null 2>&1
 if [ -f /root/.acme.sh/$hostname_i/fullchain.cer ]; then
 rm -rf /usr/local/vesta/ssl/*
 
-ln -s /root/.acme.sh/$hostname_i/fullchain.cer /usr/local/vesta/ssl/certificate.crt
-ln -s /root/.acme.sh/$hostname_i/$hostname_i.key /usr/local/vesta/ssl/certificate.key
+cp -r /root/.acme.sh/$hostname_i/fullchain.cer /usr/local/vesta/ssl/certificate.crt
+cp -r /root/.acme.sh/$hostname_i/$hostname_i.key /usr/local/vesta/ssl/certificate.key
 chmod -R 664 /usr/local/vesta/ssl/*
 service vesta restart
 
@@ -757,8 +757,10 @@ service nginx restart >/dev/null 2>&1
 fi
 IPWEB=`netstat -lntup|grep 8080| awk {'print $4'}| awk 'NR==1'| tr : " "| awk {'print $1'}`
 
-echo 'default http://0.0.0.0:80    http://'$IPWEB':8080    no    no    no           no
-default https://0.0.0.0:443  https://'$IPWEB':8443  no    no    /vddos/ssl/your-domain.com.pri /vddos/ssl/your-domain.com.crt' >> /vddos/conf.d/website.conf
+echo '
+default http://0.0.0.0:80    http://'$IPWEB':8080    no    no    no           no
+default https://0.0.0.0:443  https://'$IPWEB':8443  no    no    /vddos/ssl/your-domain.com.pri /vddos/ssl/your-domain.com.crt
+' >> /vddos/conf.d/website.conf
 fi
 
 
@@ -804,12 +806,11 @@ service httpd restart >/dev/null 2>&1
 service nginx restart >/dev/null 2>&1
 /root/.acme.sh/acme.sh --issue -d $hostname_i -w /vddos/letsencrypt
 	if [ -f /root/.acme.sh/$hostname_i/fullchain.cer ]; then
-	rm -rf /usr/local/vesta/ssl/*
-
-	ln -s /root/.acme.sh/$hostname_i/fullchain.cer /usr/local/vesta/ssl/certificate.crt
-	ln -s /root/.acme.sh/$hostname_i/$hostname_i.key /usr/local/vesta/ssl/certificate.key
-	chmod -R 664 /usr/local/vesta/ssl/*
-	service vesta restart 
+echo '
+'$hostname_i' https://0.0.0.0:443  https://'$IPWEB':8083  no    no    /root/.acme.sh/'$hostname_i'/'$hostname_i'.key /root/.acme.sh/'$hostname_i'/fullchain.cer
+' >> /vddos/conf.d/website.conf
+/usr/bin/vddos restart >/dev/null 2>&1
+echo "404" > /home/admin/web/$hostname_i/public_html/index.html
 	fi
 fi
 fi
@@ -828,7 +829,7 @@ fi
 
 mysql -V
 php -v
-
+if [ "$vDDoS_yn" != "y" ]; then
 echo '
 =====> Install and Config VDVESTA Done! <=====
 VestaCP: https://'$hostname_i':2083 or https://'$IP':8083
@@ -837,3 +838,14 @@ VestaCP: https://'$hostname_i':2083 or https://'$IP':8083
 
  Please reboot!
 '
+fi
+if [ "$vDDoS_yn" = "y" ]; then
+echo '
+=====> Install and Config VDVESTA Done! <=====
+VestaCP: https://'$hostname_i'
+	username: admin
+	password: '$password'
+
+ Please reboot!
+'
+fi
