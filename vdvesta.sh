@@ -807,7 +807,7 @@ service nginx restart >/dev/null 2>&1
 /root/.acme.sh/acme.sh --issue -d $hostname_i -w /vddos/letsencrypt
 	if [ -f /root/.acme.sh/$hostname_i/fullchain.cer ]; then
 echo '
-'$hostname_i' https://0.0.0.0:443  https://'$IPWEB':8083  no    no    /root/.acme.sh/'$hostname_i'/'$hostname_i'.key /root/.acme.sh/'$hostname_i'/fullchain.cer
+'$hostname_i' https://0.0.0.0:443  https://127.0.0.1:8083  no    no    /root/.acme.sh/'$hostname_i'/'$hostname_i'.key /root/.acme.sh/'$hostname_i'/fullchain.cer
 ' >> /vddos/conf.d/website.conf
 /usr/bin/vddos restart >/dev/null 2>&1
 echo "404" > /home/admin/web/$hostname_i/public_html/index.html
