@@ -46,19 +46,19 @@ fi
 echo 'Web Server version => '$Web_Server_version''
 
 if [ "$Web_Server_version" = "apache" ]; then
-echo -n 'Which PHP Server version you want to install [all|5.4|5.5|5.6|7.0|7.1]: '
+echo -n 'Which PHP Server version you want to install [all|5.4|5.5|5.6|7.0|7.1|7.2]: '
 read PHP_Server_version
-if [ "$PHP_Server_version" != "5.4" ] && [ "$PHP_Server_version" != "5.5" ] && [ "$PHP_Server_version" != "5.6" ] && [ "$PHP_Server_version" != "7.0" ] && [ "$PHP_Server_version" != "7.1" ] && [ "$PHP_Server_version" != "all" ]; then
-PHP_Server_version=7.1
+if [ "$PHP_Server_version" != "5.4" ] && [ "$PHP_Server_version" != "5.5" ] && [ "$PHP_Server_version" != "5.6" ] && [ "$PHP_Server_version" != "7.0" ] && [ "$PHP_Server_version" != "7.1" ] && [ "$PHP_Server_version" != "7.2" ] && [ "$PHP_Server_version" != "all" ]; then
+PHP_Server_version=all
 fi
 echo 'PHP Server version => '$PHP_Server_version''
 fi
 
 if [ "$Web_Server_version" = "nginx" ]; then
-echo -n 'Which PHP Server version you want to install [5.4|5.5|5.6|7.0|7.1]: '
+echo -n 'Which PHP Server version you want to install [5.4|5.5|5.6|7.0|7.1|7.2]: '
 read PHP_Server_version
-if [ "$PHP_Server_version" != "5.4" ] && [ "$PHP_Server_version" != "5.5" ] && [ "$PHP_Server_version" != "5.6" ] && [ "$PHP_Server_version" != "7.0" ] && [ "$PHP_Server_version" != "7.1" ]; then
-PHP_Server_version=7.1
+if [ "$PHP_Server_version" != "5.4" ] && [ "$PHP_Server_version" != "5.5" ] && [ "$PHP_Server_version" != "5.6" ] && [ "$PHP_Server_version" != "7.0" ] && [ "$PHP_Server_version" != "7.1" ] && [ "$PHP_Server_version" != "7.2" ]; then
+PHP_Server_version=7.2
 fi
 echo 'PHP Server version => '$PHP_Server_version''
 fi
