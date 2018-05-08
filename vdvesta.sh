@@ -814,11 +814,12 @@ echo "404" > /home/admin/web/$hostname_i/public_html/index.html
 	fi
 fi
 fi
-clear
+service vesta restart >/dev/null 2>&1
 if [ "$PHP_Selector_yn" = "y" ]; then
 curl -L https://github.com/duy13/VDVESTA/raw/master/freeram.sh -o /root/freeram.sh
 echo '*/10 * * * * root bash /root/freeram.sh' >> /etc/crontab
 fi
+clear
 if [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
 httpd -v
 fi

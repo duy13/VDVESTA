@@ -1,8 +1,8 @@
 cb1906c4b7897748393ae0601e3d988e  File-Manager
-7b4b49a48022d0581aede1ce9cb179d0  freeram.sh
+72a7de611d7d054fed090f0d943a091c  freeram.sh
 ab73a1fca6e9b8371862319b3f5e12d6  Limit-Hosting
-fde766aecf63cff3c7dabc55aa50b50d  md5sum.txt
+c260136ff277ad8e7a45a2e87220bb8f  md5sum.txt
 9d559262a6725a6bbd60ea546c09f50f  PHP-Selector
 d8502dccc11121871c9a40d93f9668e1  README.md
-1ecd62081da3644fedf12d6f7fa8f272  vdvesta.sh
+446171246065d054dc27909f49665844  vdvesta.sh
 1fa9daebfb30522207e6b94882311ea4  vst-install.sh
