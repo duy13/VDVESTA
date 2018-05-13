@@ -171,6 +171,8 @@ yum -y update
 yum -y install yum-utils >/dev/null 2>&1
 yum-config-manager --save --setopt=C7.3.1611-base.skip_if_unavailable=true >/dev/null 2>&1
 yum-config-manager --save --setopt=C7.3.1611-updates.skip_if_unavailable=true >/dev/null 2>&1
+yum-config-manager --save --setopt=C7.4.1708-base.skip_if_unavailable=true >/dev/null 2>&1
+yum-config-manager --save --setopt=C7.4.1708-updates.skip_if_unavailable=true >/dev/null 2>&1
 yum -y install nano screen wget curl zip unzip net-tools >/dev/null 2>&1
 yum -y remove httpd* php* mysql* >/dev/null 2>&1
 #############################################################
