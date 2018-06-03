@@ -763,6 +763,40 @@ echo '
 default http://0.0.0.0:80    http://'$IPWEB':8080    no    no    no           no
 default https://0.0.0.0:443  https://'$IPWEB':8443  no    no    /vddos/ssl/your-domain.com.pri /vddos/ssl/your-domain.com.crt
 ' >> /vddos/conf.d/website.conf
+
+# Install vDDoS Layer4 Mapping:
+curl -L https://github.com/duy13/vDDoS-Layer4-Mapping/raw/master/vddos-layer4-mapping -o /usr/bin/vddos-layer4
+chmod 700 /usr/bin/vddos-layer4
+echo 'Install vDDoS Layer4 Mapping Done!'
+
+# Install vDDoS Auto Add:
+curl -L https://github.com/duy13/vDDoS-Auto-Add/archive/master.zip -o vddos-auto-add.zip ; unzip vddos-auto-add.zip ; rm -f vddos-auto-add.zip
+mv vDDoS-Auto-Add-master /vddos/auto-add
+chmod 700 /vddos/auto-add/cron.sh; chmod 700 /vddos/auto-add/vddos-add.sh
+ln -s /vddos/auto-add/vddos-add.sh /usr/bin/vddos-add
+ln -s /vddos/auto-add/cron.sh /usr/bin/vddos-autoadd
+
+echo '# Default Setting for vddos-add command:
+
+SSL				Auto
+Cache			no
+Security		no
+HTTP_Listen		http://0.0.0.0:80
+HTTPS_Listen	https://0.0.0.0:443
+HTTP_Backend	http://'$IPWEB':8080
+HTTPS_Backend	https://'$IPWEB':8443
+' > /vddos/auto-add/setting.conf
+
+echo 'Install vDDoS Auto Add Done!'
+
+# Install vDDoS Auto Switch:
+curl -L https://github.com/duy13/vDDoS-Auto-Switch/archive/master.zip -o vddos-auto-switch.zip ; unzip vddos-auto-switch.zip ; rm -f vddos-auto-switch.zip
+mv vDDoS-Auto-Switch-master /vddos/auto-switch
+chmod 700 /vddos/auto-switch/cron.sh; chmod 700 /vddos/auto-switch/vddos-switch.sh
+ln -s /vddos/auto-switch/cron.sh /usr/bin/vddos-autoswitch
+ln -s /vddos/auto-switch/vddos-switch.sh /usr/bin/vddos-switch
+echo 'Install vDDoS Auto Switch Done!'
+
 fi
 
 
