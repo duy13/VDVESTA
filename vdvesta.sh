@@ -817,10 +817,10 @@ echo "404" > /home/admin/web/$hostname_i/public_html/index.html
 fi
 fi
 
-if [ "$vDDoS_yn" != "y" ] && [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
+if [ "$vDDoS_yn" = "y" ] && [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
 	echo '*/15  *  *  *  * root /usr/bin/vddos-autoadd panel vestacp apache' >> /etc/crontab
 fi
-if [ "$vDDoS_yn" != "y" ] && [ "$Web_Server_version" = "--nginx yes --apache no --phpfpm yes" ]; then
+if [ "$vDDoS_yn" = "y" ] && [ "$Web_Server_version" = "--nginx yes --apache no --phpfpm yes" ]; then
 	echo '*/15  *  *  *  * root /usr/bin/vddos-autoadd panel vestacp nginx' >> /etc/crontab
 fi
 
