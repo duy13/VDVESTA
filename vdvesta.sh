@@ -70,9 +70,9 @@ auto_config_PHP_yn=y
 fi
 echo 'Auto config PHP => '$auto_config_PHP_yn''
 
-echo -n 'Which MariaDB Server version you want to install [5.5|10.0|10.1]: '
+echo -n 'Which MariaDB Server version you want to install [5.5|10.0|10.1|10.2|10.3]: '
 read MariaDB_Server_version
-if [ "$MariaDB_Server_version" != "5.5" ] && [ "$MariaDB_Server_version" != "10.0" ] && [ "$MariaDB_Server_version" != "10.1" ]; then
+if [ "$MariaDB_Server_version" != "5.5" ] && [ "$MariaDB_Server_version" != "10.0" ] && [ "$MariaDB_Server_version" != "10.1" ] && [ "$MariaDB_Server_version" != "10.2" ] && [ "$MariaDB_Server_version" != "10.3" ]; then
 MariaDB_Server_version=10.1
 fi
 echo 'MariaDB Server version => '$MariaDB_Server_version''
@@ -206,12 +206,12 @@ if [ "$MariaDB_Server_version" = "10.0" ]; then
 MariaDB_Server_version='10.1'
 fi
 
-if [ "$MariaDB_Server_version" = "10.1" ]; then
-echo '# MariaDB 10.1 CentOS repository list - created 2017-02-20 12:34 UTC
+if [ "$MariaDB_Server_version" != "5.5" ]; then
+echo '# MariaDB '$MariaDB_Server_version' CentOS repository list - created 2017-02-20 12:34 UTC
 # http://downloads.mariadb.org/mariadb/repositories/
 [mariadb]
 name = MariaDB
-baseurl = http://yum.mariadb.org/10.1/centos7-amd64
+baseurl = http://yum.mariadb.org/'$MariaDB_Server_version'/centos7-amd64
 gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1' > /etc/yum.repos.d/MariaDB.repo
 fi
@@ -303,7 +303,7 @@ if [ "$Limit_Hosting_yn" = "y" ]; then
 yum -y install libcgroup
 yum -y install libcgroup-pam
 echo "session         optional        pam_cgroup.so" >> /etc/pam.d/su
-curl -L https://github.com/duy13/VDVESTA/raw/master/Limit-Hosting -o /usr/bin/Limit-Hosting
+curl -L https://raw.githubusercontent.com/duy13/VDVESTA/master/Limit-Hosting -o /usr/bin/Limit-Hosting
 goc=`curl -L https://raw.githubusercontent.com/duy13/VDVESTA/master/md5sum.txt --silent | grep "Limit-Hosting" |awk 'NR==1 {print $1}'`
 tai=`md5sum /usr/bin/Limit-Hosting | awk 'NR==1 {print $1}'`
 if [ "$goc" != "$tai" ]; then
@@ -462,7 +462,7 @@ source /usr/local/vesta/conf/vesta.conf >/dev/null 2>&1
 fi
 
 if [ "$File_Manager_yn" = "y" ]; then
-curl -L https://github.com/duy13/VDVESTA/raw/master/File-Manager -o File-Manager
+curl -L https://raw.githubusercontent.com/duy13/VDVESTA/master/File-Manager -o File-Manager
 goc=`curl -L https://raw.githubusercontent.com/duy13/VDVESTA/master/md5sum.txt --silent | grep "File-Manager" |awk 'NR==1 {print $1}'`
 tai=`md5sum Limit-Hosting | awk 'NR==1 {print $1}'`
 if [ "$goc" != "$tai" ]; then
@@ -644,7 +644,7 @@ sed -i "/.*$basedir.*/d" /usr/local/vesta/data/templates/web/httpd/nobasedir.stp
 
 if [ "$PHP_Selector_yn" = "y" ]; then
 cp -r /etc/httpd /etc/httpd-bak-$random
-curl -L https://github.com/duy13/VDVESTA/raw/master/PHP-Selector -o PHP-Selector
+curl -L https://raw.githubusercontent.com/duy13/VDVESTA/master/PHP-Selector -o PHP-Selector
 goc=`curl -L https://raw.githubusercontent.com/duy13/VDVESTA/master/md5sum.txt --silent | grep "PHP-Selector" |awk 'NR==1 {print $1}'`
 tai=`md5sum PHP-Selector | awk 'NR==1 {print $1}'`
 if [ "$goc" != "$tai" ]; then
