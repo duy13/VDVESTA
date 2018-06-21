@@ -3,6 +3,6 @@ cb1906c4b7897748393ae0601e3d988e  File-Manager
 ab73a1fca6e9b8371862319b3f5e12d6  Limit-Hosting
 b5bbec364ae80984ed385275c65107e5  md5sum.txt
 9d559262a6725a6bbd60ea546c09f50f  PHP-Selector
-d8502dccc11121871c9a40d93f9668e1  README.md
-648669e09662929dbb397a89c427379a  vdvesta.sh
+0110ee784865738366ee2c77dad7efaa  README.md
+72acdfc4c2a8dcd71c7f80cdaed12fd8  vdvesta.sh
 1fa9daebfb30522207e6b94882311ea4  vst-install.sh

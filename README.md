@@ -35,11 +35,11 @@ Would you like +install vDDoS Proxy Protection [Y|n]:
 vDDoS Proxy Protection install => y
 Which Web Server version you want to install [apache|nginx]:
 Web Server version => apache
-Which PHP Server version you want to install [all|5.4|5.5|5.6|7.0|7.1]:
+Which PHP Server version you want to install [all|5.4|5.5|5.6|7.0|7.1|7.2]:
 PHP Server version => 7.1
 Would you like auto config PHP [Y|n]:
 Auto config PHP => y
-Which MariaDB Server version you want to install [5.5|10.0|10.1]:
+Which MariaDB Server version you want to install [5.5|10.0|10.1|10.2|10.3]:
 MariaDB Server version => 10.1
 Would you like +install File Manager [Y|n]:
 File Manager install => y

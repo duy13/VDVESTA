@@ -173,7 +173,7 @@ yum-config-manager --save --setopt=C7.3.1611-base.skip_if_unavailable=true >/dev
 yum-config-manager --save --setopt=C7.3.1611-updates.skip_if_unavailable=true >/dev/null 2>&1
 yum-config-manager --save --setopt=C7.4.1708-base.skip_if_unavailable=true >/dev/null 2>&1
 yum-config-manager --save --setopt=C7.4.1708-updates.skip_if_unavailable=true >/dev/null 2>&1
-yum -y install nano screen wget curl zip unzip net-tools >/dev/null 2>&1
+yum -y install e2fsprogs nano screen wget curl zip unzip net-tools >/dev/null 2>&1
 yum -y remove httpd* php* mysql* >/dev/null 2>&1
 #############################################################
 
@@ -852,10 +852,10 @@ fi
 fi
 
 if [ "$vDDoS_yn" = "y" ] && [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
-	echo '*/15  *  *  *  * root /usr/bin/vddos-autoadd panel vestacp apache' >> /etc/crontab
+	echo '*/25  *  *  *  * root /usr/bin/vddos-autoadd panel vestacp apache' >> /etc/crontab
 fi
 if [ "$vDDoS_yn" = "y" ] && [ "$Web_Server_version" = "--nginx yes --apache no --phpfpm yes" ]; then
-	echo '*/15  *  *  *  * root /usr/bin/vddos-autoadd panel vestacp nginx' >> /etc/crontab
+	echo '*/25  *  *  *  * root /usr/bin/vddos-autoadd panel vestacp nginx' >> /etc/crontab
 fi
 
 service vesta restart >/dev/null 2>&1
