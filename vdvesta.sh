@@ -496,7 +496,7 @@ source /etc/sysconfig/clock >/dev/null 2>&1
 source /usr/local/vesta/func/main.sh >/dev/null 2>&1
 source /usr/local/vesta/conf/vesta.conf >/dev/null 2>&1
 
-/usr/local/vesta/bin/v-delete-cron-job admin 8 >/dev/null 2>&1
+#/usr/local/vesta/bin/v-delete-cron-job admin 8 >/dev/null 2>&1
 
 /usr/local/vesta/bin/v-delete-user-package gainsboro >/dev/null 2>&1
 /usr/local/vesta/bin/v-delete-user-package palegreen >/dev/null 2>&1
