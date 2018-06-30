@@ -27,7 +27,7 @@ A shell script auto Custom & Install VESTACP for your CentOS Server Release 7 x8
 								Thanks you for using!
 '
 
-vDDoS_yn=''; File_Manager_yn=''; Zend_opcode_yn=''; Memcached_yn=''; Limit_Hosting_yn='';
+vDDoS_yn=''; Varnish_yn=''; File_Manager_yn=''; Zend_opcode_yn=''; Memcached_yn=''; Limit_Hosting_yn='';
 Kernel_limit_DDOS_yn=''; change_port_yn=''; Web_Server_version=''; PHP_Server_version='';
 auto_config_PHP_yn=''; MariaDB_Server_version=''; Spamassassin_Clamav_yn=''; fail2ban_yn='';
 
@@ -37,6 +37,15 @@ if [ "$vDDoS_yn" != "y" ] && [ "$vDDoS_yn" != "n" ]; then
 vDDoS_yn=y
 fi
 echo 'vDDoS Proxy Protection install => '$vDDoS_yn''
+
+if [ "$vDDoS_yn" = "y" ]; then
+echo -n 'Would you like +install Varnish Cache [Y|n]: '
+read Varnish_yn
+if [ "$Varnish_yn" != "y" ] && [ "$Varnish_yn" != "n" ]; then
+Varnish_yn=y
+fi
+echo 'Varnish Proxy Server install => '$Varnish_yn''
+fi
 
 echo -n 'Which Web Server version you want to install [apache|nginx]: '
 read Web_Server_version
@@ -797,6 +806,33 @@ ln -s /vddos/auto-switch/cron.sh /usr/bin/vddos-autoswitch
 ln -s /vddos/auto-switch/vddos-switch.sh /usr/bin/vddos-switch
 echo 'Install vDDoS Auto Switch Done!'
 
+
+
+if [ "$Varnish_yn" = "y" ]; then
+curl -L https://github.com/duy13/VDVARNISH/raw/master/vdvarnish.sh -o vdvarnish.sh
+goc=`curl -L https://raw.githubusercontent.com/duy13/vdvarnish/master/md5sum.txt --silent | grep "vdvarnish.sh" |awk 'NR==1 {print $1}'`
+tai=`md5sum vdvarnish.sh | awk 'NR==1 {print $1}'`
+if [ "$goc" != "$tai" ]; then
+	rm -rf vdvarnish.sh
+	curl -L https://3.voduy.com/VDVARNISH/vdvarnish.sh -o vdvarnish.sh
+fi
+bash vdvarnish.sh noask
+
+Varnish_Server_sizecache=$((`cat /proc/meminfo|grep MemTotal|awk {'print $2'}`/1024/3))
+Varnish_Server_port=82
+Varnish_Backend_ip=$IPWEB
+Varnish_Backend_port=8080
+
+sed -i "s#82#$Varnish_Server_port#g" /etc/varnish/varnish.params
+sed -i "s#512#$Varnish_Server_sizecache#g" /etc/varnish/varnish.params
+sed -i "s#127.0.0.1#$Varnish_Backend_ip#g" /etc/varnish/default.vcl
+sed -i "s#8080#$Varnish_Backend_port#g" /etc/varnish/default.vcl
+
+echo 'Install Varnish Cache Done!'
+fi
+
+
+
 fi
 
 
@@ -871,7 +907,9 @@ fi
 if [ "$Web_Server_version" = "--nginx yes --apache no --phpfpm yes" ]; then
 nginx -v
 fi
-
+if [ "$Varnish_yn" = "y" ]; then
+varnishd -V
+fi
 mysql -V
 php -v
 if [ "$vDDoS_yn" != "y" ]; then
