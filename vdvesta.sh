@@ -79,7 +79,7 @@ auto_config_PHP_yn=y
 fi
 echo 'Auto config PHP => '$auto_config_PHP_yn''
 
-echo -n 'Which MariaDB Server version you want to install [5.5|10.0|10.1|10.2|10.3]: '
+echo -n 'Which MariaDB Server version you want to install [5.5|10.0|10.1]: '
 read MariaDB_Server_version
 if [ "$MariaDB_Server_version" != "5.5" ] && [ "$MariaDB_Server_version" != "10.0" ] && [ "$MariaDB_Server_version" != "10.1" ] && [ "$MariaDB_Server_version" != "10.2" ] && [ "$MariaDB_Server_version" != "10.3" ]; then
 MariaDB_Server_version=10.1
