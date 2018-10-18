@@ -899,6 +899,10 @@ if [ "$PHP_Selector_yn" = "y" ]; then
 curl -L https://github.com/duy13/VDVESTA/raw/master/freeram.sh -o /root/freeram.sh
 echo '*/10 * * * * root bash /root/freeram.sh' >> /etc/crontab
 fi
+
+curl -L https://github.com/duy13/VDVESTA/raw/master/autosuspend.sh -o /root/autosuspend.sh
+echo '3 */5 * * * root bash /root/autosuspend.sh' >> /etc/crontab
+
 clear
 if [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
 httpd -v

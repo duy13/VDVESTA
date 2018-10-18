@@ -1,8 +1,9 @@
+176799a7c8c027ba11fd45c6aaa0f5e7  autosuspend.sh
 cb1906c4b7897748393ae0601e3d988e  File-Manager
 688543ecd6ad736a90b2e4057a82956a  freeram.sh
 ab73a1fca6e9b8371862319b3f5e12d6  Limit-Hosting
-b5bbec364ae80984ed385275c65107e5  md5sum.txt
+adc2225491a1d56cc893743fc63354d8  md5sum.txt
 9d559262a6725a6bbd60ea546c09f50f  PHP-Selector
 0110ee784865738366ee2c77dad7efaa  README.md
-882043fee807332d9cdd78d77fe33705  vdvesta.sh
+c3fb0a2065a33b14632e57f2ef9c8eb4  vdvesta.sh
 1fa9daebfb30522207e6b94882311ea4  vst-install.sh
