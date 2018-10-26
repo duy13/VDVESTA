@@ -1,5 +1,9 @@
 #!/bin/bash
 # echo '0 */5 * * * root bash /root/autosuspend.sh' >> /etc/crontab
+PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/bin
+source ~/.bashrc  >/dev/null 2>&1
+source ~/.bash_profile  >/dev/null 2>&1
+
 
 # If autosuspend.sh is still running:
 if [ -f /root/autosuspend.tmp ]; then
