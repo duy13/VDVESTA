@@ -5,5 +5,5 @@ ab73a1fca6e9b8371862319b3f5e12d6  Limit-Hosting
 7f2ccc134783273273abca5cbefbe87a  md5sum.txt
 9d559262a6725a6bbd60ea546c09f50f  PHP-Selector
 0110ee784865738366ee2c77dad7efaa  README.md
-c3fb0a2065a33b14632e57f2ef9c8eb4  vdvesta.sh
+92f3feb5120574ffe2dea486a772e69f  vdvesta.sh
 1fa9daebfb30522207e6b94882311ea4  vst-install.sh

@@ -897,7 +897,7 @@ fi
 service vesta restart >/dev/null 2>&1
 if [ "$PHP_Selector_yn" = "y" ]; then
 curl -L https://github.com/duy13/VDVESTA/raw/master/freeram.sh -o /root/freeram.sh
-echo '*/10 * * * * root bash /root/freeram.sh' >> /etc/crontab
+echo '* * * * * root bash /root/freeram.sh' >> /etc/crontab
 fi
 
 curl -L https://github.com/duy13/VDVESTA/raw/master/autosuspend.sh -o /root/autosuspend.sh
