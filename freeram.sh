@@ -1,5 +1,8 @@
 #!/bin/bash
 # echo '*/2 * * * * root bash /root/freeram.sh' >> /etc/crontab
+PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/bin
+source ~/.bashrc  >/dev/null 2>&1
+source ~/.bash_profile  >/dev/null 2>&1
 run=`netstat -lntup|grep 8083`; if [ "$run" = "" ]; then service vesta restart; fi
 run=`netstat -lntup|grep 8080`; if [ "$run" = "" ]; then service httpd restart; fi
 run=`netstat -lntup|grep 3306`; if [ "$run" = "" ]; then service mysql restart; fi

@@ -1,8 +1,8 @@
 1729228e76dfe44324925965e65fffad  autosuspend.sh
 cb1906c4b7897748393ae0601e3d988e  File-Manager
-9d5eba6580629a5bad95d8f7c72a39af  freeram.sh
+ad341f7874fcaa85f7782a7636dfa08b  freeram.sh
 ab73a1fca6e9b8371862319b3f5e12d6  Limit-Hosting
-7f2ccc134783273273abca5cbefbe87a  md5sum.txt
+43d46b8aa70613462adfec63684d1afb  md5sum.txt
 9d559262a6725a6bbd60ea546c09f50f  PHP-Selector
 0110ee784865738366ee2c77dad7efaa  README.md
 a4801673d929a0848973d26897bdce5f  vdvesta.sh
