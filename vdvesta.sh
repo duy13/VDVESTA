@@ -55,21 +55,7 @@ fi
 echo 'Web Server version => '$Web_Server_version''
 
 if [ "$Web_Server_version" = "apache" ]; then
-echo -n 'Which PHP Server version you want to install [all|5.4|5.5|5.6|7.0|7.1|7.2]: '
-read PHP_Server_version
-if [ "$PHP_Server_version" != "5.4" ] && [ "$PHP_Server_version" != "5.5" ] && [ "$PHP_Server_version" != "5.6" ] && [ "$PHP_Server_version" != "7.0" ] && [ "$PHP_Server_version" != "7.1" ] && [ "$PHP_Server_version" != "7.2" ] && [ "$PHP_Server_version" != "all" ]; then
 PHP_Server_version=all
-fi
-echo 'PHP Server version => '$PHP_Server_version''
-fi
-
-if [ "$Web_Server_version" = "nginx" ]; then
-echo -n 'Which PHP Server version you want to install [5.4|5.5|5.6|7.0|7.1|7.2]: '
-read PHP_Server_version
-if [ "$PHP_Server_version" != "5.4" ] && [ "$PHP_Server_version" != "5.5" ] && [ "$PHP_Server_version" != "5.6" ] && [ "$PHP_Server_version" != "7.0" ] && [ "$PHP_Server_version" != "7.1" ] && [ "$PHP_Server_version" != "7.2" ]; then
-PHP_Server_version=7.2
-fi
-echo 'PHP Server version => '$PHP_Server_version''
 fi
 
 echo -n 'Would you like auto config PHP [Y|n]: '
@@ -78,13 +64,6 @@ if [ "$auto_config_PHP_yn" != "y" ] && [ "$auto_config_PHP_yn" != "n" ]; then
 auto_config_PHP_yn=y
 fi
 echo 'Auto config PHP => '$auto_config_PHP_yn''
-
-echo -n 'Which MariaDB Server version you want to install [5.5|10.0|10.1]: '
-read MariaDB_Server_version
-if [ "$MariaDB_Server_version" != "5.5" ] && [ "$MariaDB_Server_version" != "10.0" ] && [ "$MariaDB_Server_version" != "10.1" ] && [ "$MariaDB_Server_version" != "10.2" ] && [ "$MariaDB_Server_version" != "10.3" ]; then
-MariaDB_Server_version=10.1
-fi
-echo 'MariaDB Server version => '$MariaDB_Server_version''
 
 echo -n 'Would you like +install File Manager [Y|n]: '
 read File_Manager_yn
@@ -178,10 +157,6 @@ fi
 echo 'Email => '$email_i''
 yum -y update
 yum -y install yum-utils >/dev/null 2>&1
-yum-config-manager --save --setopt=C7.3.1611-base.skip_if_unavailable=true >/dev/null 2>&1
-yum-config-manager --save --setopt=C7.3.1611-updates.skip_if_unavailable=true >/dev/null 2>&1
-yum-config-manager --save --setopt=C7.4.1708-base.skip_if_unavailable=true >/dev/null 2>&1
-yum-config-manager --save --setopt=C7.4.1708-updates.skip_if_unavailable=true >/dev/null 2>&1
 yum -y install e2fsprogs nano screen wget curl zip unzip net-tools nano screen wget curl zip unzip net-tools which psmisc htop sysstat e2fsprogs >/dev/null 2>&1
 yum -y remove httpd* php* mysql* >/dev/null 2>&1
 #############################################################
@@ -215,16 +190,6 @@ if [ "$MariaDB_Server_version" = "10.0" ]; then
 MariaDB_Server_version='10.1'
 fi
 
-if [ "$MariaDB_Server_version" != "5.5" ]; then
-echo '# MariaDB '$MariaDB_Server_version' CentOS repository list - created 2017-02-20 12:34 UTC
-# http://downloads.mariadb.org/mariadb/repositories/
-[mariadb]
-name = MariaDB
-baseurl = http://yum.mariadb.org/'$MariaDB_Server_version'/centos7-amd64
-gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-gpgcheck=1' > /etc/yum.repos.d/MariaDB.repo
-fi
-
 xfs_yn=`cat /etc/fstab |grep xfs`
 if [ "$xfs_yn" == "" ]; then
 xfs_yn=n
@@ -232,14 +197,7 @@ fi
 
 ############################################################
 
-curl -L https://github.com/duy13/VDVESTA/raw/master/vst-install.sh -o vst-install.sh
-goc=`curl -L https://raw.githubusercontent.com/duy13/VDVESTA/master/md5sum.txt --silent | grep "vst-install.sh" |awk 'NR==1 {print $1}'`
-tai=`md5sum vst-install.sh | awk 'NR==1 {print $1}'`
-if [ "$goc" != "$tai" ]; then
-curl -L http://1.voduy.com/VDVESTA/vst-install.sh -o vst-install.sh
-fi
-
-chmod 700 vst-install.sh
+curl -O http://vestacp.com/pub/vst-install.sh
 
 
 if [ "$Web_Server_version" = "apache" ]; then
@@ -272,10 +230,10 @@ if [ "$Web_Server_version" = "apache" ]; then
 Web_Server_version='--nginx no --apache yes --phpfpm no'
 fi
 
-sed -i "s#%PHP_Server_version%#$PHP_Server_version#g" vst-install.sh
-sed -i "s#%MariaDB_Server_version%#$MariaDB_Server_version#g" vst-install.sh
 
-bash vst-install.sh --force --interactive yes $Web_Server_version --vsftpd yes --proftpd no --exim yes --dovecot yes $Spamassassin_Clamav_yn --named yes --iptables yes $fail2ban_yn --mysql yes --postgresql no $Remi_yn $quota_yn --hostname $hostname_i --email $email_i --password $password
+bash vst-install.sh --force --interactive yes $Web_Server_version --vsftpd yes --proftpd no --exim yes --dovecot yes $Spamassassin_Clamav_yn --named yes --remi yes --iptables yes $fail2ban_yn --softaculous no --mysql yes --postgresql no $Remi_yn $quota_yn --hostname $hostname_i --email $email_i --password $password
+
+
 
 if [ "$vDDoS_yn" != "y" ]; then
 yum -y install socat
@@ -298,12 +256,12 @@ fi
 
 
 if [ "$Zend_opcode_yn" = "y" ]; then
-yum -y --enablerepo=remi,remi-php$PHP_Server_version install  php-opcache
+yum -y --enablerepo=remi* install  php-opcache
 
 fi
 
 if [ "$Memcached_yn" = "y" ]; then
-yum -y --enablerepo=remi,remi-php$PHP_Server_version install php-pecl-memcached php-pecl-memcache memcached php-memcached
+yum -y --enablerepo=remi* install php-pecl-memcached php-pecl-memcache memcached php-memcached
 service memcached start
 chkconfig memcached on
 fi
