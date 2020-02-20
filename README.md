@@ -125,7 +125,8 @@ Limit Hosting:
 
 3/ More Config:
 ---------------
-Document: http://vdvesta.voduy.com
+HomePage: http://vdvesta.voduy.com
+Forum Support: https://link.voduy.com/forum-vdvesta
 ```
 Still in beta, use at your own risk! It is provided without any warranty!
 ```
