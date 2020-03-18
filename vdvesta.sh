@@ -846,10 +846,12 @@ fi
 fi
 
 if [ "$vDDoS_yn" = "y" ] && [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
-	echo '*/25  *  *  *  * root /usr/bin/vddos-autoadd panel vestacp apache' >> /etc/crontab
+	echo '*/21  *  *  *  * root /usr/bin/vddos-autoadd panel vestacp apache' >> /etc/crontab
+	echo '2 2 * * * root acme.sh --upgrade ; vddos-autoadd ssl-again' >> /etc/crontab
 fi
 if [ "$vDDoS_yn" = "y" ] && [ "$Web_Server_version" = "--nginx yes --apache no --phpfpm yes" ]; then
-	echo '*/25  *  *  *  * root /usr/bin/vddos-autoadd panel vestacp nginx' >> /etc/crontab
+	echo '*/21  *  *  *  * root /usr/bin/vddos-autoadd panel vestacp nginx' >> /etc/crontab
+	echo '2 2 * * * root acme.sh --upgrade ; vddos-autoadd ssl-again' >> /etc/crontab
 fi
 
 service vesta restart >/dev/null 2>&1
