@@ -159,6 +159,7 @@ yum -y update
 yum -y install yum-utils >/dev/null 2>&1
 yum -y install e2fsprogs nano screen wget curl zip unzip net-tools nano screen wget curl zip unzip net-tools which psmisc htop sysstat e2fsprogs >/dev/null 2>&1
 yum -y remove httpd* php* mysql* >/dev/null 2>&1
+
 #############################################################
 
 
@@ -230,7 +231,7 @@ if [ "$Web_Server_version" = "apache" ]; then
 Web_Server_version='--nginx no --apache yes --phpfpm no'
 fi
 
-
+sed -i '/enabled=0/a skip_if_unavailable=1' /etc/yum.repos.d/CentOS-Vault.repo
 bash vst-install.sh --force --interactive yes $Web_Server_version --vsftpd yes --proftpd no --exim yes --dovecot yes $Spamassassin_Clamav_yn --named yes --remi yes --iptables yes $fail2ban_yn --softaculous no --mysql yes --postgresql no $Remi_yn $quota_yn --hostname $hostname_i --email $email_i --password $password
 
 
