@@ -432,9 +432,9 @@ fi
 if [ "$File_Manager_yn" = "y" ]; then
 curl -L https://raw.githubusercontent.com/duy13/VDVESTA/master/File-Manager -o File-Manager
 goc=`curl -L https://raw.githubusercontent.com/duy13/VDVESTA/master/md5sum.txt --silent | grep "File-Manager" |awk 'NR==1 {print $1}'`
-tai=`md5sum Limit-Hosting | awk 'NR==1 {print $1}'`
+tai=`md5sum File-Manager | awk 'NR==1 {print $1}'`
 if [ "$goc" != "$tai" ]; then
-curl -L http://1.voduy.com/VDVESTA/File-Manager -o File-Manager
+curl -L http://files.voduy.com/VDVESTA/File-Manager -o File-Manager
 fi
 chmod 700 File-Manager
 ./File-Manager
