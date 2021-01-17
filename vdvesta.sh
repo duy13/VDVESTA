@@ -31,6 +31,23 @@ vDDoS_yn=''; Varnish_yn=''; File_Manager_yn=''; Zend_opcode_yn=''; Memcached_yn=
 Kernel_limit_DDOS_yn=''; change_port_yn=''; Web_Server_version=''; PHP_Server_version='';
 auto_config_PHP_yn=''; MariaDB_Server_version=''; Spamassassin_Clamav_yn=''; fail2ban_yn='';
 
+
+echo '
+ LAMP5: Apache + PHP 5.4 + MariaDB 5.5
+ LAMP7: Apache + PHP 7.4 + MariaDB 10.5
+ LAMP8: Apache + PHP 8.0 + MariaDB 10.5
+
+ LEMP7: Nginx + PHP 7.4 + MariaDB 10.5
+ LEMP8: Nginx + PHP 8.0 + MariaDB 10.5
+'
+echo -n 'Which Web Server version you want to install [lamp5|lamp7|lemp7|lamp8|lemp8]: '
+read software_all
+if [ "$software_all" != "lamp5" ] && [ "$software_all" != "lamp7" ] && [ "$software_all" != "lemp7" ] && [ "$software_all" != "lamp8" ] && [ "$software_all" != "lemp8" ]; then
+software_all=lamp7
+fi
+echo 'Web Server version install => '$software_all''
+
+
 echo -n 'Would you like +install vDDoS Proxy Protection [Y|n]: '
 read vDDoS_yn
 if [ "$vDDoS_yn" != "y" ] && [ "$vDDoS_yn" != "n" ]; then
@@ -45,17 +62,6 @@ if [ "$Varnish_yn" != "y" ] && [ "$Varnish_yn" != "n" ]; then
 Varnish_yn=y
 fi
 echo 'Varnish Proxy Server install => '$Varnish_yn''
-fi
-
-echo -n 'Which Web Server version you want to install [apache|nginx]: '
-read Web_Server_version
-if [ "$Web_Server_version" != "apache" ] && [ "$Web_Server_version" != "nginx" ]; then
-Web_Server_version=apache
-fi
-echo 'Web Server version => '$Web_Server_version''
-
-if [ "$Web_Server_version" = "apache" ]; then
-PHP_Server_version=all
 fi
 
 echo -n 'Would you like auto config PHP [Y|n]: '
@@ -155,6 +161,7 @@ if [ "$email_i" = "" ]; then
 email_i='admin@'$hostname_i''
 fi
 echo 'Email => '$email_i''
+echo 'timeout=60' >> /etc/yum.conf
 yum -y update
 yum -y install yum-utils >/dev/null 2>&1
 yum -y install e2fsprogs nano screen wget curl zip unzip net-tools nano screen wget curl zip unzip net-tools which psmisc htop sysstat e2fsprogs >/dev/null 2>&1
@@ -162,34 +169,64 @@ yum -y remove httpd* php* mysql* >/dev/null 2>&1
 
 #############################################################
 
-
-
-
-
-
-if [ "$PHP_Server_version" != "" ]; then
-PHP_Server_version=`echo $PHP_Server_version |tr -d .`
-fi
-
-Remi_yn='--remi yes'
-if [ "$PHP_Server_version" = "54" ]; then
-Remi_yn='--remi no'
+# lamp5: PHP 5.4 + MariaDB 5.5
+if [ "$software_all" = "lamp5" ]; then
+Web_Server_version=apache
+PHP_Server_version=54
 MariaDB_Server_version='5.5'
+Remi_yn='--remi no'
+PHP_Selector_yn='n'
 fi
 
-PHP_Selector_yn=n
-if [ "$PHP_Server_version" = "all" ]; then
-PHP_Server_version='56'
+# lamp7: PHP 7.4 + MariaDB 10.5
+if [ "$software_all" = "lamp7" ]; then
+Web_Server_version=apache
+PHP_Server_version=74
+MariaDB_Server_version='10.5'
+Remi_yn='--remi yes'
 PHP_Selector_yn='y'
 fi
-
-if [ "$MariaDB_Server_version" = "5.5" ]; then
-MariaDB_Server_version='5.5'
+# lemp7: PHP 7.4 + MariaDB 10.5
+if [ "$software_all" = "lemp7" ]; then
+Web_Server_version=nginx
+PHP_Server_version=74
+MariaDB_Server_version='10.5'
+Remi_yn='--remi yes'
+PHP_Selector_yn='n'
 fi
 
-if [ "$MariaDB_Server_version" = "10.0" ]; then
-MariaDB_Server_version='10.1'
+
+
+# lamp8: PHP 8.0 + MariaDB 10.5
+if [ "$software_all" = "lamp8" ]; then
+Web_Server_version=apache
+PHP_Server_version=80
+MariaDB_Server_version='10.5'
+Remi_yn='--remi yes'
+PHP_Selector_yn='y'
 fi
+# lemp8: PHP 8.0 + MariaDB 10.5
+if [ "$software_all" = "lemp8" ]; then
+Web_Server_version=nginx
+PHP_Server_version=80
+MariaDB_Server_version='10.5'
+Remi_yn='--remi yes'
+PHP_Selector_yn='n'
+fi
+
+
+if [ "$MariaDB_Server_version" != "5.5" ]; then
+echo '# MariaDB '$MariaDB_Server_version' CentOS repository list - created 2021-01-17 09:08 UTC
+# http://downloads.mariadb.org/mariadb/repositories/
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/'$MariaDB_Server_version'/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1' > /etc/yum.repos.d/MariaDB.repo
+fi
+
+
+
 
 xfs_yn=`cat /etc/fstab |grep xfs`
 if [ "$xfs_yn" == "" ]; then
@@ -198,7 +235,13 @@ fi
 
 ############################################################
 
-curl -O http://vestacp.com/pub/vst-install.sh
+#curl -O http://vestacp.com/pub/vst-install.sh
+wget https://raw.githubusercontent.com/duy13/VDVESTA/master/vst-install.sh
+
+d='%PHP_Server_version%'; c="$PHP_Server_version"
+sed -i "s#$d#$c#g" vst-install.sh
+d='%MariaDB_Server_version%'; c="$MariaDB_Server_version"
+sed -i "s#$d#$c#g" vst-install.sh
 
 
 if [ "$Web_Server_version" = "apache" ]; then
@@ -231,8 +274,9 @@ if [ "$Web_Server_version" = "apache" ]; then
 Web_Server_version='--nginx no --apache yes --phpfpm no'
 fi
 
+
 sed -i '/enabled=0/a skip_if_unavailable=1' /etc/yum.repos.d/CentOS-Vault.repo
-bash vst-install.sh --force --interactive yes $Web_Server_version --vsftpd yes --proftpd no --exim yes --dovecot yes $Spamassassin_Clamav_yn --named yes --remi yes --iptables yes $fail2ban_yn --softaculous no --mysql yes --postgresql no $Remi_yn $quota_yn --hostname $hostname_i --email $email_i --password $password
+bash vst-install.sh --force --interactive yes $Web_Server_version --vsftpd yes --proftpd no --exim yes --dovecot yes $Spamassassin_Clamav_yn --named yes --iptables yes $fail2ban_yn --softaculous no --mysql yes --postgresql no $Remi_yn $quota_yn --hostname $hostname_i --email $email_i --password $password
 
 
 
@@ -255,17 +299,35 @@ fi
 fi
 
 
-
+# lamp5: PHP 5.4 + MariaDB 5.5
+if [ "$software_all" = "lamp5" ]; then
 if [ "$Zend_opcode_yn" = "y" ]; then
 yum -y --enablerepo=remi* install  php-opcache
-
 fi
 
 if [ "$Memcached_yn" = "y" ]; then
-yum -y --enablerepo=remi* install php-pecl-memcached php-pecl-memcache memcached php-memcached
+yum -y --enablerepo=remi* install php-pecl-memcached php-pecl-memcache memcached php-memcached 
 service memcached start
 chkconfig memcached on
 fi
+fi
+
+# lamp7,lemp7...
+if [ "$software_all" != "lamp5" ]; then
+if [ "$Zend_opcode_yn" = "y" ]; then
+yum -y --enablerepo=--enablerepo=remi,remi-php$PHP_Server_version install  php-opcache
+fi
+
+if [ "$Memcached_yn" = "y" ]; then
+yum -y --enablerepo=--enablerepo=remi,remi-php$PHP_Server_version install php-pecl-memcached php-pecl-memcache memcached php-memcached redis php-pecl-redis
+service memcached start
+chkconfig memcached on
+chkconfig redis on
+service redis start
+fi
+fi
+
+
 
 if [ "$Limit_Hosting_yn" = "y" ]; then
 yum -y install libcgroup
@@ -374,7 +436,15 @@ cp /usr/local/vesta/data/firewall/rules.conf /usr/local/vesta/data/firewall/rule
 sed -i '/8083;/a listen 2083;' /usr/local/vesta/nginx/conf/nginx.conf
 service vesta restart
 sed -i "s#8083#8083,2083#g" /usr/local/vesta/data/firewall/rules.conf
+
 /usr/local/vesta/bin/v-update-firewall
+
+
+if [ "$vDDoS_yn" = "y" ]; then
+/usr/local/vesta/bin/v-delete-firewall-rule 2
+/usr/local/vesta/bin/v-update-firewall
+fi
+
 fi
 
 if [ "$auto_config_PHP_yn" = "y" ]; then
