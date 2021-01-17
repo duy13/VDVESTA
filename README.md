@@ -31,10 +31,6 @@ vdvesta script interface:
 A shell script auto Custom & Install VESTACP for your CentOS Server Release 7 x86_64.
                                                                 Thanks you for using!
 
-        Welcome to VDVESTA:
-A shell script auto Custom & Install VESTACP for your CentOS Server Release 7 x86_64.
-                                                                Thanks you for using!
-
 
  LAMP5: Apache + PHP 5.4 + MariaDB 5.5
  LAMP7: Apache + PHP 7.4 + MariaDB 10.5
