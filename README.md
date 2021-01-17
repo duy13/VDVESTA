@@ -31,16 +31,26 @@ vdvesta script interface:
 A shell script auto Custom & Install VESTACP for your CentOS Server Release 7 x86_64.
                                                                 Thanks you for using!
 
+        Welcome to VDVESTA:
+A shell script auto Custom & Install VESTACP for your CentOS Server Release 7 x86_64.
+                                                                Thanks you for using!
+
+
+ LAMP5: Apache + PHP 5.4 + MariaDB 5.5
+ LAMP7: Apache + PHP 7.4 + MariaDB 10.5
+ LAMP8: Apache + PHP 8.0 + MariaDB 10.5
+
+ LEMP7: Nginx + PHP 7.4 + MariaDB 10.5
+ LEMP8: Nginx + PHP 8.0 + MariaDB 10.5
+
+Which Web Server version you want to install [lamp5|lamp7|lemp7|lamp8|lemp8]:
+Web Server version install => lamp7
 Would you like +install vDDoS Proxy Protection [Y|n]:
 vDDoS Proxy Protection install => y
-Which Web Server version you want to install [apache|nginx]:
-Web Server version => apache
-Which PHP Server version you want to install [all|5.4|5.5|5.6|7.0|7.1|7.2]:
-PHP Server version => 7.1
+Would you like +install Varnish Cache [Y|n]:
+Varnish Proxy Server install => y
 Would you like auto config PHP [Y|n]:
 Auto config PHP => y
-Which MariaDB Server version you want to install [5.5|10.0|10.1|10.2|10.3]:
-MariaDB Server version => 10.1
 Would you like +install File Manager [Y|n]:
 File Manager install => y
 Would you like +install Zend optimize plus opcode cache [Y|n]:
@@ -96,11 +106,14 @@ Would you like to continue [y/n]: y
 ......................................
 
 Server version: Apache/2.4.16 (Unix)
-mysql  Ver 15.1 Distrib 10.1.28-MariaDB, for Linux (x86_64) using readline 5.1
-PHP 7.1.10 (cli) (built: Sep 27 2017 08:27:18) ( NTS )
-Copyright (c) 1997-2017 The PHP Group
-Zend Engine v3.1.0, Copyright (c) 1998-2017 Zend Technologies
-    with Zend OPcache v7.1.10, Copyright (c) 1999-2017, by Zend Technologies
+varnishd (varnish-4.1.11 revision 61367ed17d08a9ef80a2d42dc84caef79cdeee7a)
+Copyright (c) 2006 Verdens Gang AS
+Copyright (c) 2006-2019 Varnish Software AS
+mysql Ver 15.1 Distrib 10.5.8-MariaDB, for Linux (x86_64) using readline 5.1
+PHP 7.4.11 (cli) (built: Jan 5 2021 13:54:54) ( NTS gcc x86_64 )
+Copyright (c) The PHP Group
+Zend Engine v4.0.1, Copyright (c) Zend Technologies
+with Zend OPcache v8.0.1, Copyright (c), by Zend Technologies
 
 =====> Install and Config VDVESTA Done! <=====
  Link VestaCP: https://v1.your-domain.com:2083 or https://13.9.19.90:8083
