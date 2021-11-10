@@ -903,6 +903,7 @@ if [ "$vDDoS_yn" = "y" ]; then
 if [ ! -f /root/.acme.sh/$hostname_i/fullchain.cer ]; then
 yum -y install socat
 wget -O -  https://get.acme.sh | sh
+/root/.acme.sh/acme.sh --set-default-ca  --server  letsencrypt >/dev/null 2>&1
 echo '@monthly root sleep 10 && service vesta restart' | sudo tee --append /etc/crontab  >/dev/null 2>&1
 service httpd restart >/dev/null 2>&1
 service nginx restart >/dev/null 2>&1
@@ -926,6 +927,7 @@ if [ "$vDDoS_yn" = "y" ] && [ "$Web_Server_version" = "--nginx yes --apache no -
 	echo '2 2 * * * root acme.sh --upgrade ; vddos-autoadd ssl-again' >> /etc/crontab
 fi
 
+/usr/local/vesta/bin/v-delete-cron-vesta-autoupdate >/dev/null 2>&1
 service vesta restart >/dev/null 2>&1
 /usr/bin/curl --silent --header "X-Install: vDVESTA" https://files.voduy.com/iplog.php
 
