@@ -441,10 +441,10 @@ sed -i "s#8083#8083,2083#g" /usr/local/vesta/data/firewall/rules.conf
 /usr/local/vesta/bin/v-update-firewall
 
 
-if [ "$vDDoS_yn" = "y" ]; then
-/usr/local/vesta/bin/v-delete-firewall-rule 2
-/usr/local/vesta/bin/v-update-firewall
-fi
+#if [ "$vDDoS_yn" = "y" ]; then
+#/usr/local/vesta/bin/v-delete-firewall-rule 2
+#/usr/local/vesta/bin/v-update-firewall
+#fi
 
 fi
 
@@ -779,17 +779,50 @@ fi
 
 
 if [ "$vDDoS_yn" = "y" ]; then
-latest_version=`curl -L https://raw.githubusercontent.com/duy13/vDDoS-Protection/master/CHANGELOG.txt|grep '*vDDoS-' |awk 'NR==1' |tr -d '*vDDoS-'|tr -d ':'`
-curl -L https://github.com/duy13/vDDoS-Protection/raw/master/vddos-$latest_version-centos7 -o /usr/bin/vddos
-goc=`curl -L https://raw.githubusercontent.com/duy13/vDDoS-Protection/master/md5sum.txt --silent | grep "vddos-$latest_version-centos7" |awk 'NR==1 {print $1}'`
-tai=`md5sum /usr/bin/vddos | awk 'NR==1 {print $1}'`
-if [ "$goc" != "$tai" ]; then
-curl -L http://1.voduy.com/vDDoS-Proxy-Protection/vddos-$latest_version-centos7 -o /usr/bin/vddos
+# Install vDDoS Proxy Protection:
+
+latest_version=`/usr/bin/curl -L https://raw.githubusercontent.com/duy13/vDDoS-Protection/master/CHANGELOG.txt|grep '*vDDoS-' |awk 'NR==1' |tr -d '*vDDoS-'|tr -d ':'`
+/usr/bin/curl -L https://github.com/duy13/vDDoS-Protection/raw/master/vddos-$latest_version.tar.gz -o vddos-$latest_version.tar.gz
+
+originhash=`curl -L https://raw.githubusercontent.com/duy13/vDDoS-Protection/master/md5sum.txt --silent | grep "vddos-$latest_version.tar.gz" |awk 'NR=1 {print $1}'`
+downloadhash=`md5sum vddos-$latest_version.tar.gz | awk 'NR=1 {print $1}'`
+if [ "$originhash" != "$downloadhash" ]; then
+	echo 'Download vddos-'$latest_version'.tar.gz from Github.com failed! Try Downloading from SourceForge.net...'
+	rm -rf vddos-$latest_version.tar.gz
+	curl -L https://sourceforge.net/projects/vddos-protection/files/vddos-$latest_version.tar.gz -o vddos-$latest_version.tar.gz
+
+	originhash=`curl -L https://sourceforge.net/projects/vddos-protection/files/md5sum.txt --silent | grep "vddos-$latest_version.tar.gz" |awk 'NR=1 {print $1}'`
+	downloadhash=`md5sum vddos-$latest_version.tar.gz | awk 'NR=1 {print $1}'`
+	if [ "$originhash" != "$downloadhash" ]; then
+		echo 'Download vddos-'$latest_version'.tar.gz from SourceForge.net failed! Try Downloading from Files.voduy.com...'
+		rm -rf vddos-$latest_version.tar.gz
+		curl -L https://files.voduy.com/vDDoS-Proxy-Protection/vddos-$latest_version.tar.gz -o vddos-$latest_version.tar.gz
+	fi
+
 fi
 
-chmod 700 /usr/bin/vddos
-/usr/bin/vddos setup
-/usr/bin/vddos autostart
+tar -xvf vddos-$latest_version.tar.gz >/dev/null 2>&1
+cd vddos-$latest_version
+chmod 755 -R *.sh  >/dev/null 2>&1
+chmod 755 -R */*.sh  >/dev/null 2>&1
+./install.sh master
+
+if [ -f /vddos/vddos ]; then
+
+	curl -L https://github.com/duy13/vDDoS-Layer4-Mapping/raw/master/vddos-layer4-mapping -o /usr/bin/vddos-layer4
+	chmod 700 /usr/bin/vddos-layer4
+
+	echo 'Install vDDoS Proxy Protection Done!'
+
+	/root/.acme.sh/acme.sh --set-default-ca  --server  letsencrypt >/dev/null 2>&1
+	
+else
+	echo 'Install vDDoS Proxy Protection Failed!'
+	exit 1
+fi
+
+
+
 if [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
 service httpd restart >/dev/null 2>&1
 fi
@@ -803,17 +836,6 @@ default http://0.0.0.0:80    http://'$IPWEB':8080    no    no    no           no
 default https://0.0.0.0:443  https://'$IPWEB':8443  no    no    /vddos/ssl/your-domain.com.pri /vddos/ssl/your-domain.com.crt
 ' >> /vddos/conf.d/website.conf
 
-# Install vDDoS Layer4 Mapping:
-curl -L https://github.com/duy13/vDDoS-Layer4-Mapping/raw/master/vddos-layer4-mapping -o /usr/bin/vddos-layer4
-chmod 700 /usr/bin/vddos-layer4
-echo 'Install vDDoS Layer4 Mapping Done!'
-
-# Install vDDoS Auto Add:
-curl -L https://github.com/duy13/vDDoS-Auto-Add/archive/master.zip -o vddos-auto-add.zip ; unzip vddos-auto-add.zip ; rm -f vddos-auto-add.zip
-mv vDDoS-Auto-Add-master /vddos/auto-add
-chmod 700 /vddos/auto-add/cron.sh; chmod 700 /vddos/auto-add/vddos-add.sh
-ln -s /vddos/auto-add/vddos-add.sh /usr/bin/vddos-add
-ln -s /vddos/auto-add/cron.sh /usr/bin/vddos-autoadd
 
 echo '# Default Setting for vddos-add command:
 
@@ -828,13 +850,6 @@ HTTPS_Backend	https://'$IPWEB':8443
 
 echo 'Install vDDoS Auto Add Done!'
 
-# Install vDDoS Auto Switch:
-curl -L https://github.com/duy13/vDDoS-Auto-Switch/archive/master.zip -o vddos-auto-switch.zip ; unzip vddos-auto-switch.zip ; rm -f vddos-auto-switch.zip
-mv vDDoS-Auto-Switch-master /vddos/auto-switch
-chmod 700 /vddos/auto-switch/cron.sh; chmod 700 /vddos/auto-switch/vddos-switch.sh
-ln -s /vddos/auto-switch/cron.sh /usr/bin/vddos-autoswitch
-ln -s /vddos/auto-switch/vddos-switch.sh /usr/bin/vddos-switch
-echo 'Install vDDoS Auto Switch Done!'
 
 
 
