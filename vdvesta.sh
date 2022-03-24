@@ -840,6 +840,8 @@ default https://0.0.0.0:443  https://'$IPWEB':8443  no    no    /vddos/ssl/your-
 echo '# Default Setting for vddos-add command:
 
 SSL				Auto
+DNS_sleep 		66
+DNS_alias_mode	no
 Cache			no
 Security		no
 HTTP_Listen		http://0.0.0.0:80
