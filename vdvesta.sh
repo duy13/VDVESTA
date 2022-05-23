@@ -956,6 +956,13 @@ fi
 curl -L https://github.com/duy13/VDVESTA/raw/master/autosuspend.sh -o /root/autosuspend.sh
 echo '3 */5 * * * root bash /root/autosuspend.sh' >> /etc/crontab
 
+
+s='force_local_logins_ssl=YES' ; r='force_local_logins_ssl=NO'
+sed -i "s#$s#$r#g" /etc/vsftpd/vsftpd.conf
+s='force_local_data_ssl=YES' ; r='force_local_data_ssl=NO'
+sed -i "s#$s#$r#g" /etc/vsftpd/vsftpd.conf
+service vsftpd restart
+
 clear
 if [ "$Web_Server_version" = "--nginx no --apache yes --phpfpm no" ]; then
 httpd -v
