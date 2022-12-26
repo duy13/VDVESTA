@@ -278,6 +278,12 @@ fi
 sed -i '/enabled=0/a skip_if_unavailable=1' /etc/yum.repos.d/CentOS-Vault.repo
 bash vst-install.sh --force --interactive yes $Web_Server_version --vsftpd yes --proftpd no --exim yes --dovecot yes $Spamassassin_Clamav_yn --named yes --iptables yes $fail2ban_yn --softaculous no --mysql yes --postgresql no $Remi_yn $quota_yn --hostname $hostname_i --email $email_i --password $password
 
+net_yn=`curl -I www.google.com|grep "HTTP/1.1"| awk {'print $2'}`
+if [ "$net_yn" != "200" ]; then
+net_cardname=`ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//"`
+iptables -I OUTPUT -o $net_cardname -d 0.0.0.0/0 -j ACCEPT
+iptables -I INPUT -i $net_cardname -m state --state ESTABLISHED,RELATED -j ACCEPT
+fi
 
 
 if [ "$vDDoS_yn" != "y" ]; then
