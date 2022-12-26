@@ -220,8 +220,8 @@ echo '# MariaDB '$MariaDB_Server_version' CentOS repository list - created 2021-
 # http://downloads.mariadb.org/mariadb/repositories/
 [mariadb]
 name = MariaDB
-baseurl = http://yum.mariadb.org/'$MariaDB_Server_version'/centos7-amd64
-gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+baseurl = https://download.nus.edu.sg/mirror/mariadb/yum/'$MariaDB_Server_version'/centos7-amd64
+gpgkey=https://download.nus.edu.sg/mirror/mariadb/yum/RPM-GPG-KEY-MariaDB
 gpgcheck=1' > /etc/yum.repos.d/MariaDB.repo
 fi
 
