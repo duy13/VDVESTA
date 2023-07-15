@@ -276,7 +276,7 @@ fi
 
 
 sed -i '/enabled=0/a skip_if_unavailable=1' /etc/yum.repos.d/CentOS-Vault.repo
-bash vst-install.sh --force --interactive yes $Web_Server_version --vsftpd yes --proftpd no --exim yes --dovecot yes $Spamassassin_Clamav_yn --named yes --iptables yes $fail2ban_yn --softaculous no --mysql yes --postgresql no $Remi_yn $quota_yn --hostname $hostname_i --email $email_i --password $password
+bash vst-install.sh --force --interactive yes $Web_Server_version --vsftpd yes --proftpd no --exim no --dovecot no $Spamassassin_Clamav_yn --named no --iptables yes $fail2ban_yn --softaculous no --mysql yes --postgresql no $Remi_yn $quota_yn --hostname $hostname_i --email $email_i --password $password
 
 net_yn=`curl -I www.google.com|grep "HTTP/1.1"| awk {'print $2'}`
 if [ "$net_yn" != "200" ]; then
